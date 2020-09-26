@@ -1,0 +1,193 @@
+{
+  "metadata": {
+    "schemaVersion": "1.0",
+    "importType": "LEX",
+    "importFormat": "JSON"
+  },
+  "resource": {
+    "name": "PotatoBot",
+    "version": "6",
+    "intents": [
+      {
+        "name": "ReturnPurchase",
+        "version": "26",
+        "fulfillmentActivity": {
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:176331078863:function:Refund",
+            "messageVersion": "1.0"
+          },
+          "type": "CodeHook"
+        },
+        "sampleUtterances": [
+          "I would like to return a product",
+          "Hi",
+          "Hello",
+          "Good morning",
+          "Good evening",
+          "Good afternoon",
+          "Good night",
+          "I want to return clothes",
+          "May I return a purchase"
+        ],
+        "slots": [
+          {
+            "sampleUtterances": [],
+            "slotType": "confirmation",
+            "slotTypeVersion": "1",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Do you want to finish the return process and receive your payment reversal?"
+                }
+              ],
+              "responseCard": "{\"version\":1,\"contentType\":\"application/vnd.amazonaws.card.generic\",\"genericAttachments\":[{\"title\":\"Confirm request\",\"buttons\":[{\"text\":\"Yes\",\"value\":\"yes\"},{\"text\":\"No\",\"value\":\"no\"}]}]}",
+              "maxAttempts": 2
+            },
+            "priority": 3,
+            "name": "Confirmation"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "AMAZON.AlphaNumeric",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What is your Order ID?"
+                }
+              ],
+              "responseCard": "{\"version\":1,\"contentType\":\"application/vnd.amazonaws.card.generic\"}",
+              "maxAttempts": 2
+            },
+            "priority": 2,
+            "name": "OrderID"
+          },
+          {
+            "sampleUtterances": [
+              "The reason is {Reason}"
+            ],
+            "slotType": "reason",
+            "slotTypeVersion": "10",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Hi, I'm Potato Bot and I'll help you to return your purchase. Why do you want to return it?"
+                }
+              ],
+              "responseCard": "{\"version\":1,\"contentType\":\"application/vnd.amazonaws.card.generic\",\"genericAttachments\":[{\"subTitle\":\"Select just one reason\",\"title\":\"Reason of return\",\"buttons\":[{\"text\":\"I don't want this product anymore.\",\"value\":\"give up\"},{\"text\":\"I bought it by accident.\",\"value\":\"bought by accident\"},{\"text\":\"Delivery will take too long.\",\"value\":\"long delivery\"},{\"text\":\"I found a better price elsewhere.\",\"value\":\"better price elsewhere\"},{\"text\":\"Other\",\"value\":\"other\"}]}]}",
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "name": "Reason"
+          }
+        ]
+      }
+    ],
+    "slotTypes": [
+      {
+        "description": "Reason for change, return or give up",
+        "name": "reason",
+        "version": "10",
+        "enumerationValues": [
+          {
+            "value": "give up"
+          },
+          {
+            "value": "other",
+            "synonyms": [
+              "horrible",
+              "bigger",
+              "small",
+              "big",
+              "smaller",
+              "breakdown",
+              "damaged",
+              "hideous",
+              "out of fashion",
+              "outdated",
+              "obsolete",
+              "old",
+              "hate",
+              "size",
+              "color",
+              "colour",
+              "style",
+              "type"
+            ]
+          },
+          {
+            "value": "bought by accident"
+          },
+          {
+            "value": "better price elsewhere"
+          },
+          {
+            "value": "long delivery"
+          }
+        ],
+        "valueSelectionStrategy": "TOP_RESOLUTION"
+      },
+      {
+        "description": "User confirmation to finish the return process",
+        "name": "confirmation",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "no",
+            "synonyms": [
+              "not",
+              "nope",
+              "non",
+              "nay",
+              "negative",
+              "no way"
+            ]
+          },
+          {
+            "value": "yes",
+            "synonyms": [
+              "ok",
+              "yeah",
+              "sure",
+              "yea",
+              "yep",
+              "positive"
+            ]
+          }
+        ],
+        "valueSelectionStrategy": "TOP_RESOLUTION"
+      }
+    ],
+    "voiceId": "Nicole",
+    "childDirected": false,
+    "locale": "en-AU",
+    "idleSessionTTLInSeconds": 60,
+    "clarificationPrompt": {
+      "messages": [
+        {
+          "contentType": "PlainText",
+          "content": "Sorry, I can only help you returning purchase at the moment."
+        }
+      ],
+      "maxAttempts": 2
+    },
+    "abortStatement": {
+      "messages": [
+        {
+          "contentType": "PlainText",
+          "content": "Sorry, I am not able to assist at this time. Sorry, I can only help you returning purchase at the moment."
+        }
+      ]
+    },
+    "detectSentiment": false,
+    "enableModelImprovements": true
+  }
+}
